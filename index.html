@@ -128,6 +128,10 @@
             -webkit-transition: all 1s;
             transition: all 1s;
         }
+        .alertMsg {
+            width: 80% !important;
+            color: red !important;
+        }
     </style>
 </head>
 <body>
@@ -179,9 +183,12 @@
             var list = canvas.getElementsByTagName('a');
             var color = '#' + ('00000' + Math.floor(Math.random() * 0xffffff)).slice(-6);
             var color = 'yellow';
+            if (member.length - Object.keys(choosed).length - count < 0 ) {
+                return ret;
+            }
             for(var i = 0; i < count; i++){
                 do {
-                    var id = Math.ceil(Math.random() * total);
+                    var id = Math.floor(Math.random() * total);
                     if(member[id]){
                         var key = getKey(member[id]);
                     }
@@ -198,13 +205,14 @@
         canvas.width = document.body.offsetWidth;
         canvas.height = document.body.offsetHeight;
         document.getElementById('main').appendChild(canvas);
+        member.length = 6
         new Vue({
             el: '#tools',
             data: {
-                selected: 30,
+                selected: 3,
                 running: false,
                 btns: [
-                    30, 10, 5, 2, 1
+                    3, 2, 1
                 ]
             },
             ready: function(){
@@ -232,7 +240,11 @@
                     if(this.running){
                         TagCanvas.SetSpeed('myCanvas', speed());
                         var ret = lottery(this.selected);
-                        $('#result').css('display', 'block').html('<span>' + ret.join('</span><span>') + '</span>');
+                        if (ret.length) {
+                            $('#result').css('display', 'block').html('<span>' + ret.join('</span><span>') + '</span>');
+                        } else {
+                            $('#result').css('display', 'block').html('<span class="alertMsg">' + '可中奖人数低于设置数, 请重试!' + '</span>'); 
+                        }
                         TagCanvas.Reload('myCanvas');
                         setTimeout(function(){
                             localStorage.setItem(new Date().toString(), JSON.stringify(ret));
