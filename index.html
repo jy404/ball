@@ -148,9 +148,8 @@
         class="pure-button"
         v-on="click: toggle"
         v-class="
-                button-success: !running,
-                button-error: running
-            ">{{running?'停!':'开始'}}</button>
+            button-success: !running,
+            button-error: running">{{running?'停止':'启动'}}</button>
     <button 
         class="pure-button button-success"
         v-on="click: toggle2">{{show?'隐藏':'上次'}}</button>
@@ -237,9 +236,6 @@
                     }
                 },
                 onClick: function(num){
-                    $('#result').css('display', 'none');
-                    $('#main').removeClass('mask');
-                    this.show = true;
                     this.selected = num;
                 },
                 toggle: function(){
@@ -255,15 +251,13 @@
                         setTimeout(function(){
                             localStorage.setItem(new Date().toString(), JSON.stringify(ret));
                             $('#main').addClass('mask');
-                            this.show = false;
                         }, 300);
-                        console.log(ret);
                     } else {
                         $('#result').css('display', 'none');
                         $('#main').removeClass('mask');
-                        this.show = true;
                         TagCanvas.SetSpeed('myCanvas', [5, 1]);
                     }
+                    this.show = this.running;
                     this.running = !this.running;
                 },
                 toggle2: function () {
